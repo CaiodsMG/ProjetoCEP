@@ -10,6 +10,8 @@ import com.cep.projeto.dtos.EnderecoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -25,9 +27,17 @@ public class ClienteService {
     @Autowired
     private ViaCepService viaCepService;
 
-    public Iterable<Cliente> clientes(){
-        return repository.findAll();
+    public List<ClienteDTO> listarClientes() {
+
+        List<ClienteDTO> lista = new ArrayList<>();
+
+        for (Cliente c : repository.findAll()){
+            lista.add(transformaCliente(c));
+        }
+
+        return lista;
     }
+
 
     public Cliente buscarPorId(Long id){
         return repository.findById(id).orElseThrow(() ->
@@ -81,7 +91,9 @@ public class ClienteService {
     }
 
     private ClienteDTO transformaCliente(Cliente cliente){
-        return new ClienteDTO(cliente.getNome(), cliente.getEndereco().getCep());
+        return new ClienteDTO(
+                cliente.getNome(),
+                transformaEndereco(cliente.getEndereco()));
     }
 
 }
