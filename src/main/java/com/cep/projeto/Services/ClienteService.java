@@ -1,16 +1,15 @@
 package com.cep.projeto.Services;
 
 import com.cep.projeto.Exceptions.UsuarioNaoEncontrado;
+import com.cep.projeto.Exceptions.ViaCepException;
 import com.cep.projeto.Model.Cliente;
 import com.cep.projeto.Model.Endereco;
 import com.cep.projeto.Repositories.ClienteRepository;
 import com.cep.projeto.Repositories.EnderecoRepository;
 import com.cep.projeto.dtos.ClienteDTO;
-import com.cep.projeto.dtos.EnderecoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,22 +27,15 @@ public class ClienteService {
     private ViaCepService viaCepService;
 
     public List<ClienteDTO> listarClientes() {
-
-        List<ClienteDTO> lista = new ArrayList<>();
-
-        for (Cliente c : repository.findAll()){
-            lista.add(transformaCliente(c));
-        }
-
-        return lista;
+        return ClienteDTO.listaClientes(repository.findAll());
     }
 
 
     public ClienteDTO buscarPorId(Long id){
         Cliente cliente = repository.findById(id).orElseThrow(() ->
-                new UsuarioNaoEncontrado("O usuário com id " + id + " não foi encontrado." ));
+                new UsuarioNaoEncontrado(id));
 
-        return transformaCliente(cliente);
+        return ClienteDTO.paraClienteDTO(cliente);
     }
 
     public ClienteDTO inserirCliente(Cliente cliente){
@@ -55,7 +47,7 @@ public class ClienteService {
         if (clienteId.isPresent()) {
             salvarClienteComCep(cliente);
         }
-        throw new UsuarioNaoEncontrado("O usuário com id " + id + " não foi encontrado." );
+        throw new UsuarioNaoEncontrado(id);
     }
 
     public void deletarCliente(Long id){
@@ -69,7 +61,7 @@ public class ClienteService {
 
         Endereco endereco = enderecoRepository.findById(cep)
                 .orElseGet(() -> {
-                    Endereco novoEndereco = viaCepService.consultarCep(cep);
+                    Endereco novoEndereco = consultarCep(cep);
                     enderecoRepository.save(novoEndereco);
                     return novoEndereco;
                 });
@@ -78,24 +70,16 @@ public class ClienteService {
 
         Cliente salvo = repository.save(cliente);
 
-        return transformaCliente(salvo);
+        return ClienteDTO.paraClienteDTO(salvo);
     }
 
+    private Endereco consultarCep(String cep){
+        try{
+            return viaCepService.consultarCep(cep);
+        } catch (Exception e) {
+            throw new ViaCepException(cep);
+        }
 
-
-    private EnderecoDTO transformaEndereco(Endereco endereco){
-        return new EnderecoDTO(
-                endereco.getCep(),
-                endereco.getBairro(),
-                endereco.getLocalidade(),
-                endereco.getUf(),
-                endereco.getDdd());
-    }
-
-    private ClienteDTO transformaCliente(Cliente cliente){
-        return new ClienteDTO(
-                cliente.getNome(),
-                transformaEndereco(cliente.getEndereco()));
     }
 
 }

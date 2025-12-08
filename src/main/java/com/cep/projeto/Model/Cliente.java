@@ -3,9 +3,7 @@ package com.cep.projeto.Model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 @Entity
 public class Cliente {
@@ -25,8 +23,7 @@ public class Cliente {
     public Cliente() {
     }
 
-    public Cliente(Long id, String nome, Endereco endereco) {
-        this.id = id;
+    public Cliente(String nome, Endereco endereco) {
         this.nome = nome;
         this.endereco = endereco;
     }

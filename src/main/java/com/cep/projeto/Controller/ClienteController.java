@@ -36,4 +36,11 @@ public class ClienteController {
         return service.inserirCliente(cliente);
     }
 
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ClienteDTO atualizarCliente(@Valid @PathVariable Long id,
+                                       @RequestBody Cliente cliente ){
+        return service.atualizarCliente(id, cliente);
+    }
+
 }

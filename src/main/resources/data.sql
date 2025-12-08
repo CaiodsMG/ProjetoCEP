@@ -3,7 +3,7 @@ INSERT INTO endereco (cep, logradouro, complemento, bairro, localidade, uf, ibge
 ('30140071', 'Avenida Afonso Pena', '', 'Centro', 'Belo Horizonte', 'MG', '3106200', '', '31', '4123'),
 ('70040900', 'Esplanada dos Ministérios', '', 'Asa Sul', 'Brasília', 'DF', '5300108', '', '61', '9701');
 
-INSERT INTO cliente (id, nome, endereco_cep) VALUES
-(1, 'João Silva', '01001000'),
-(2, 'Maria Souza', '30140071'),
-(3, 'Carlos Pereira', '70040900');
+INSERT INTO cliente (nome, endereco_cep) VALUES
+('João Silva', '01001000'),
+('Maria Souza', '30140071'),
+('Carlos Pereira', '70040900');
