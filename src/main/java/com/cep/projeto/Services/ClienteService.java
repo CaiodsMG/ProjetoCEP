@@ -39,9 +39,11 @@ public class ClienteService {
     }
 
 
-    public Cliente buscarPorId(Long id){
-        return repository.findById(id).orElseThrow(() ->
+    public ClienteDTO buscarPorId(Long id){
+        Cliente cliente = repository.findById(id).orElseThrow(() ->
                 new UsuarioNaoEncontrado("O usuário com id " + id + " não foi encontrado." ));
+
+        return transformaCliente(cliente);
     }
 
     public ClienteDTO inserirCliente(Cliente cliente){
