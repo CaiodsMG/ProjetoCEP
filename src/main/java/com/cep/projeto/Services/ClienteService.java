@@ -7,6 +7,7 @@ import com.cep.projeto.Model.Endereco;
 import com.cep.projeto.Repositories.ClienteRepository;
 import com.cep.projeto.Repositories.EnderecoRepository;
 import com.cep.projeto.dtos.ClienteDTO;
+import com.cep.projeto.dtos.EnderecoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,13 +43,10 @@ public class ClienteService {
         return salvarClienteComCep(cliente);
     }
 
-    public ClienteDTO atualizarCliente(Long id, Cliente cliente) {
-        Optional<Cliente> clienteId = repository.findById(id);
-        if (clienteId.isPresent()) {
-            salvarClienteComCep(cliente);
-        }
-        throw new UsuarioNaoEncontrado(id);
+    public ClienteDTO atualizarCliente(Long id, Cliente cliente){
+        return atualizarClienteComCep(id, cliente);
     }
+
 
     public void deletarCliente(Long id){
         repository.deleteById(id);
@@ -72,6 +70,29 @@ public class ClienteService {
 
         return ClienteDTO.paraClienteDTO(salvo);
     }
+
+    public ClienteDTO atualizarClienteComCep(Long id, Cliente clienteAtualizado) {
+        Cliente clienteEncontrado = repository.findById(id)
+                .orElseThrow(() -> new UsuarioNaoEncontrado(id));
+
+        clienteEncontrado.setNome(clienteAtualizado.getNome());
+
+        String cep = clienteAtualizado.getEndereco().getCep();
+
+        Endereco endereco = enderecoRepository.findById(cep)
+                .orElseGet(() -> {
+                    Endereco novoEndereco = consultarCep(cep);
+                    enderecoRepository.save(novoEndereco);
+                    return novoEndereco;
+                });
+
+        clienteEncontrado.setEndereco(endereco);
+
+        Cliente salvo = repository.save(clienteEncontrado);
+
+        return ClienteDTO.paraClienteDTO(salvo);
+    }
+
 
     private Endereco consultarCep(String cep){
         try{

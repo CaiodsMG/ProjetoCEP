@@ -11,36 +11,35 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("clientes")
-public class ClienteController {
+public class ClienteController implements ClienteControllerApi {
 
     @Autowired
     private ClienteService service;
 
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
+    @Override
     public List<ClienteDTO> clientes(){
         return service.listarClientes();
     }
 
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ClienteDTO cliente(@PathVariable Long id){
+    @Override
+    public ClienteDTO cliente( Long id){
         return service.buscarPorId(id);
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ClienteDTO inserirCliente(@Valid @RequestBody Cliente cliente){
+    @Override
+    public ClienteDTO inserirCliente( Cliente cliente){
         return service.inserirCliente(cliente);
     }
 
-    @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public ClienteDTO atualizarCliente(@Valid @PathVariable Long id,
-                                       @RequestBody Cliente cliente ){
+    @Override
+    public ClienteDTO atualizarCliente(Long id, Cliente cliente){
         return service.atualizarCliente(id, cliente);
+    }
+
+    @Override
+    public void deletarCliente(Long id){
+        service.deletarCliente(id);
     }
 
 }

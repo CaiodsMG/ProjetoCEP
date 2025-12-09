@@ -1,6 +1,6 @@
 package com.cep.projeto.Exceptions;
 
-public class UsuarioNaoEncontrado extends RuntimeException {
+public class UsuarioNaoEncontrado extends EntidadeNaoEncontradaException {
 
     public static final String USUARIO_NAOENCONTRADO_EXCEPTION = "O usuário com id %d não foi encontrado.";
 
