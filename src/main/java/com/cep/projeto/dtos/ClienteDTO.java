@@ -1,23 +1,27 @@
 package com.cep.projeto.dtos;
 
-import com.cep.projeto.Model.Cliente;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.util.List;
+public class ClienteDTO {
 
-public record ClienteDTO(
-        String nome,
-        EnderecoDTO endereco
-){
+    @JsonProperty
+    @Schema(example = "Caio Magalhães")
+    private String nome;
+    @JsonProperty
+    @Schema(example = "71931000")
+    private String cep;
 
-    public static ClienteDTO paraClienteDTO(Cliente cliente){
-        return new ClienteDTO(
-                cliente.getNome(),
-                EnderecoDTO.paraEnderecoDTO(cliente.getEndereco()));
-
+    public ClienteDTO(String nome, String cep) {
+        this.nome = nome;
+        this.cep = cep;
     }
 
-    public static List<ClienteDTO> listaClientes(List<Cliente> clientes){
-        return clientes.stream().map(cliente -> paraClienteDTO(cliente)).toList();
+    public String getNome() {
+        return nome;
+    }
+
+    public String getCep() {
+        return cep;
     }
 }
-

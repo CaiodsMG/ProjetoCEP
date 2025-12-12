@@ -1,6 +1,6 @@
 package com.cep.projeto.Services;
 
-import com.cep.projeto.Model.Endereco;
+import com.cep.projeto.Entities.Endereco;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -2,17 +2,16 @@ package com.cep.projeto.Services;
 
 import com.cep.projeto.Exceptions.UsuarioNaoEncontrado;
 import com.cep.projeto.Exceptions.ViaCepException;
-import com.cep.projeto.Model.Cliente;
-import com.cep.projeto.Model.Endereco;
+import com.cep.projeto.Entities.Cliente;
+import com.cep.projeto.Entities.Endereco;
+import com.cep.projeto.Model.ClienteModelResponse;
 import com.cep.projeto.Repositories.ClienteRepository;
 import com.cep.projeto.Repositories.EnderecoRepository;
 import com.cep.projeto.dtos.ClienteDTO;
-import com.cep.projeto.dtos.EnderecoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -27,24 +26,24 @@ public class ClienteService {
     @Autowired
     private ViaCepService viaCepService;
 
-    public List<ClienteDTO> listarClientes() {
-        return ClienteDTO.listaClientes(repository.findAll());
+    public List<ClienteModelResponse> listarClientes() {
+        return ClienteModelResponse.listaClientes(repository.findAll());
     }
 
 
-    public ClienteDTO buscarPorId(Long id){
+    public ClienteModelResponse buscarPorId(Long id){
         Cliente cliente = repository.findById(id).orElseThrow(() ->
                 new UsuarioNaoEncontrado(id));
 
-        return ClienteDTO.paraClienteDTO(cliente);
+        return ClienteModelResponse.paraClienteResponse(cliente);
     }
 
-    public ClienteDTO inserirCliente(Cliente cliente){
+    public ClienteModelResponse inserirCliente(ClienteDTO cliente){
         return salvarClienteComCep(cliente);
     }
 
-    public ClienteDTO atualizarCliente(Long id, Cliente cliente){
-        return atualizarClienteComCep(id, cliente);
+    public ClienteModelResponse atualizarCliente(Long id, String nome, String cep){
+        return atualizarClienteComCep(id, nome, cep);
     }
 
 
@@ -53,9 +52,11 @@ public class ClienteService {
     }
 
 
-    private ClienteDTO salvarClienteComCep(Cliente cliente) {
+    private ClienteModelResponse salvarClienteComCep(ClienteDTO cliente) {
 
-        String cep = cliente.getEndereco().getCep();
+        Cliente novoCliente = new Cliente();
+
+        String cep = cliente.getCep();
 
         Endereco endereco = enderecoRepository.findById(cep)
                 .orElseGet(() -> {
@@ -64,20 +65,19 @@ public class ClienteService {
                     return novoEndereco;
                 });
 
-        cliente.setEndereco(endereco);
+        novoCliente.setEndereco(endereco);
+        novoCliente.setNome(cliente.getNome());
 
-        Cliente salvo = repository.save(cliente);
+        Cliente salvo = repository.save(novoCliente);
 
-        return ClienteDTO.paraClienteDTO(salvo);
+        return ClienteModelResponse.paraClienteResponse(salvo);
     }
 
-    public ClienteDTO atualizarClienteComCep(Long id, Cliente clienteAtualizado) {
+    public ClienteModelResponse atualizarClienteComCep(Long id, String nome, String cep) {
         Cliente clienteEncontrado = repository.findById(id)
                 .orElseThrow(() -> new UsuarioNaoEncontrado(id));
 
-        clienteEncontrado.setNome(clienteAtualizado.getNome());
-
-        String cep = clienteAtualizado.getEndereco().getCep();
+        clienteEncontrado.setNome(nome);
 
         Endereco endereco = enderecoRepository.findById(cep)
                 .orElseGet(() -> {
@@ -90,7 +90,7 @@ public class ClienteService {
 
         Cliente salvo = repository.save(clienteEncontrado);
 
-        return ClienteDTO.paraClienteDTO(salvo);
+        return ClienteModelResponse.paraClienteResponse(salvo);
     }
 
 

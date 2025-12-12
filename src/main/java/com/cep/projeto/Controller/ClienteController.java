@@ -1,11 +1,11 @@
+
 package com.cep.projeto.Controller;
 
-import com.cep.projeto.Model.Cliente;
+import com.cep.projeto.Entities.Cliente;
+import com.cep.projeto.Model.ClienteModelResponse;
 import com.cep.projeto.Services.ClienteService;
 import com.cep.projeto.dtos.ClienteDTO;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,23 +18,23 @@ public class ClienteController implements ClienteControllerApi {
 
 
     @Override
-    public List<ClienteDTO> clientes(){
+    public List<ClienteModelResponse> clientes(){
         return service.listarClientes();
     }
 
     @Override
-    public ClienteDTO cliente( Long id){
+    public ClienteModelResponse clientePorId(Long id){
         return service.buscarPorId(id);
     }
 
     @Override
-    public ClienteDTO inserirCliente( Cliente cliente){
+    public ClienteModelResponse inserirCliente( ClienteDTO cliente){
         return service.inserirCliente(cliente);
     }
 
     @Override
-    public ClienteDTO atualizarCliente(Long id, Cliente cliente){
-        return service.atualizarCliente(id, cliente);
+    public ClienteModelResponse atualizarCliente(Long id, ClienteDTO cliente){
+        return service.atualizarCliente(id, cliente.getNome(), cliente.getCep());
     }
 
     @Override

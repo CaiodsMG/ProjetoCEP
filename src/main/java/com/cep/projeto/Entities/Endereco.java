@@ -1,10 +1,7 @@
-package com.cep.projeto.Model;
+package com.cep.projeto.Entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 public class Endereco {

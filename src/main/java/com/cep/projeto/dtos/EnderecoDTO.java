@@ -1,6 +1,6 @@
 package com.cep.projeto.dtos;
 
-import com.cep.projeto.Model.Endereco;
+import com.cep.projeto.Entities.Endereco;
 
 public record EnderecoDTO(
         String cep,
@@ -10,14 +10,6 @@ public record EnderecoDTO(
         String ddd
 ) {
 
-    public static EnderecoDTO paraEnderecoDTO(Endereco endereco){
-        return new EnderecoDTO(
-                endereco.getCep(),
-                endereco.getBairro(),
-                endereco.getLocalidade(),
-                endereco.getUf(),
-                endereco.getDdd());
 
-    }
 }
 

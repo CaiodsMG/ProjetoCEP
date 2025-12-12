@@ -1,4 +1,4 @@
-package com.cep.projeto.Model;
+package com.cep.projeto.Entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
