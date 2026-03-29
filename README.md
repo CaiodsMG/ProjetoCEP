@@ -51,7 +51,7 @@ Para testar o projeto, o primeiro passo é clonar este repositório para a sua m
 Você pode fazer isso pelo próprio GitHub, copiando o link do projeto na opção `Code`, e depois executando o comando abaixo no terminal:
 
 ```bash
-git clone <url-do-repositorio>
+git clone https://github.com/CaiodsMG/ProjetoCEP.git
 ```
 
 Depois do clone, basta abrir a pasta do projeto na IDE de sua preferência, como IntelliJ ou VS Code. Com o projeto aberto, já é possível visualizar a estrutura, as classes principais e executar a aplicação localmente.
