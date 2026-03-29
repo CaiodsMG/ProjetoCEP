@@ -1,4 +1,4 @@
-# Projeto CEP
+﻿# Projeto CEP
 
 API REST feita com Spring Boot para gerenciar clientes e preencher o endereço automaticamente a partir do CEP informado, usando a API do ViaCEP.
 
@@ -15,6 +15,9 @@ Os dados ficam em um banco H2 em memória, o que facilita bastante para testar l
 - busca cliente por ID
 - atualiza nome e CEP de um cliente
 - remove clientes
+- busca clientes por nome
+- busca clientes por UF
+- busca clientes por cidade
 - consulta o ViaCEP automaticamente quando precisa montar o endereço
 - reutiliza endereços já salvos no banco para evitar consultas desnecessárias
 - disponibiliza documentação da API com Swagger
@@ -96,6 +99,24 @@ GET /clientes/listarTodos
 
 ```http
 GET /clientes/buscarPor/{id}
+```
+
+### Buscar por nome
+
+```http
+GET /clientes/buscarPorNome?nome=Caio
+```
+
+### Buscar por UF
+
+```http
+GET /clientes/buscarPorUf?uf=DF
+```
+
+### Buscar por cidade
+
+```http
+GET /clientes/buscarPorCidade?localidade=Brasília
 ```
 
 ### Cadastrar cliente

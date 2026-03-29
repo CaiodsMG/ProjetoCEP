@@ -35,7 +35,52 @@ public interface ClienteControllerApi {
     })
     public ClienteModelResponse clientePorId(@PathVariable Long id);
 
-    @PostMapping("Cadastrar")
+    @GetMapping("/buscarPorNome")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Busca clientes cujo nome contenha o valor informado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Clientes encontrados"),
+            @ApiResponse(responseCode = "400",
+                    description = "Parâmetro inválido",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    ))
+    })
+    public List<ClienteModelResponse> buscarPorNomeContendo(@RequestParam String nome);
+
+    @GetMapping("/buscarPorUf")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Busca clientes cuja UF contenha o valor informado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Clientes encontrados"),
+            @ApiResponse(responseCode = "400",
+                    description = "Parâmetro inválido",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    ))
+    })
+    public List<ClienteModelResponse> buscarPorUf(@RequestParam String uf);
+
+    @GetMapping("/buscarPorCidade")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Busca clientes cuja cidade contenha o valor informado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Clientes encontrados"),
+            @ApiResponse(responseCode = "400",
+                    description = "Parâmetro inválido",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    ))
+    })
+    public List<ClienteModelResponse> buscarPorCidade(@RequestParam String localidade);
+
+    @PostMapping("/Cadastrar")
     @ResponseStatus(HttpStatus.CREATED)
     public ClienteModelResponse inserirCliente(@Valid @RequestBody ClienteDTO cliente);
 

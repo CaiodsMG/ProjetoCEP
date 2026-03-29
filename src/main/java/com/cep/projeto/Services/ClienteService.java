@@ -8,6 +8,7 @@ import com.cep.projeto.Model.ClienteModelResponse;
 import com.cep.projeto.Repositories.ClienteRepository;
 import com.cep.projeto.Repositories.EnderecoRepository;
 import com.cep.projeto.dtos.ClienteDTO;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,24 @@ public class ClienteService {
                 new UsuarioNaoEncontrado(id));
 
         return ClienteModelResponse.paraClienteResponse(cliente);
+    }
+
+    public List<ClienteModelResponse> buscarPorParteNome(String nome){
+        List<Cliente> clientes = repository.buscarPorNome(nome);
+
+        return getClientes(clientes);
+    }
+    
+    public List<ClienteModelResponse> buscarPorUf(String uf){
+        List<Cliente> clientes = repository.buscarPorUf(uf);
+        
+        return getClientes(clientes);
+    }
+
+    public List<ClienteModelResponse> buscarPorCidade(String localidade){
+        List<Cliente> clientes = repository.buscarPorCidade(localidade);
+
+        return getClientes(clientes);
     }
 
     public ClienteModelResponse inserirCliente(ClienteDTO cliente){
@@ -103,4 +122,7 @@ public class ClienteService {
 
     }
 
+    private static @NonNull List<ClienteModelResponse> getClientes(List<Cliente> clientes) {
+        return ClienteModelResponse.listaClientes(clientes);
+    }
 }

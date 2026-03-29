@@ -28,6 +28,21 @@ public class ClienteController implements ClienteControllerApi {
     }
 
     @Override
+    public List<ClienteModelResponse> buscarPorNomeContendo(String nome) {
+        return service.buscarPorParteNome(nome);
+    }
+
+    @Override
+    public List<ClienteModelResponse> buscarPorUf(String uf) {
+        return service.buscarPorUf(uf);
+    }
+
+    @Override
+    public List<ClienteModelResponse> buscarPorCidade(String localidade) {
+        return service.buscarPorCidade(localidade);
+    }
+
+    @Override
     public ClienteModelResponse inserirCliente( ClienteDTO cliente){
         return service.inserirCliente(cliente);
     }
