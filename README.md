@@ -1,4 +1,4 @@
-﻿# Projeto CEP
+# Projeto CEP
 
 API REST feita com Spring Boot para gerenciar clientes e preencher o endereço automaticamente a partir do CEP informado, usando a API do ViaCEP.
 
@@ -18,8 +18,11 @@ Os dados ficam em um banco H2 em memória, o que facilita bastante para testar l
 - busca clientes por nome
 - busca clientes por UF
 - busca clientes por cidade
+- busca clientes por nome + UF
 - consulta o ViaCEP automaticamente quando precisa montar o endereço
 - reutiliza endereços já salvos no banco para evitar consultas desnecessárias
+- valida nome e CEP antes de processar a requisição
+- retorna erros padronizados em JSON
 - disponibiliza documentação da API com Swagger
 
 ## Tecnologias usadas
@@ -119,6 +122,12 @@ GET /clientes/buscarPorUf?uf=DF
 GET /clientes/buscarPorCidade?localidade=Brasília
 ```
 
+### Buscar por nome e UF
+
+```http
+GET /clientes/buscarPorNomeEUf?nome=Carlos&uf=DF
+```
+
 ### Cadastrar cliente
 
 ```http
@@ -157,6 +166,17 @@ Exemplo:
 DELETE /clientes/DeletarPor/{id}
 ```
 
+## Validações
+
+Antes de cadastrar ou atualizar um cliente, a API valida os dados enviados.
+
+Regras atuais:
+
+- `nome` não pode estar em branco
+- `nome` deve ter entre 3 e 50 caracteres
+- `cep` não pode estar em branco
+- `cep` deve conter exatamente 8 dígitos e apenas números
+
 ## Exemplo de resposta
 
 ```json
@@ -173,12 +193,43 @@ DELETE /clientes/DeletarPor/{id}
 }
 ```
 
+## Exemplo de erro de validação
+
+```json
+{
+  "error": "Erro de validação",
+  "fields": [
+    {
+      "field": "cep",
+      "message": "O CEP deve conter exatamente 8 dígitos e apenas números"
+    }
+  ],
+  "path": "/clientes/Cadastrar",
+  "status": 400,
+  "timestamp": "30/03/2026 10:45:38"
+}
+```
+
+## Exemplo de erro de CEP inválido
+
+Quando o CEP não é encontrado ou o ViaCEP não retorna um endereço válido, a API responde em formato padronizado:
+
+```json
+{
+  "timestamp": "30/03/2026 11:00:00",
+  "status": 404,
+  "error": "Erro ao buscar o CEP 99999999. O ViaCEP pode estar fora do ar",
+  "path": "/clientes/Cadastrar"
+}
+```
+
 ## Regras da aplicação
 
 - o cliente é salvo com nome e CEP
 - se o CEP ainda não existir no banco local, a aplicação consulta o ViaCEP
 - se o endereço já tiver sido consultado antes, ele é reaproveitado
 - ao atualizar um cliente, também é possível trocar o CEP
+- se o ViaCEP não retornar um endereço válido, a API responde com erro padronizado
 
 ## Tratamento de erros
 

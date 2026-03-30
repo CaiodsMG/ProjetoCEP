@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class ErrorResponse {
 
@@ -16,6 +17,9 @@ public class ErrorResponse {
     @Schema(example = "/clientes/100")
     private String path;
 
+    private List<FieldErrorResponse> fields;
+
+
     public ErrorResponse(){}
 
     public ErrorResponse(int status, String error, String path) {
@@ -24,6 +28,16 @@ public class ErrorResponse {
         this.status = status;
         this.error = error;
         this.path = path;
+    }
+
+
+    public ErrorResponse(int status, String error, String path, List<FieldErrorResponse> fields) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        this.timestamp = LocalDateTime.now().format(formatter);
+        this.status = status;
+        this.error = error;
+        this.path = path;
+        this.fields = fields;
     }
 
     public String getTimestamp() {
@@ -40,5 +54,9 @@ public class ErrorResponse {
 
     public String getPath() {
         return path;
+    }
+
+    public List<FieldErrorResponse> getFields() {
+        return fields;
     }
 }

@@ -1,7 +1,6 @@
 
 package com.cep.projeto.Controller;
 
-import com.cep.projeto.Entities.Cliente;
 import com.cep.projeto.Model.ClienteModelResponse;
 import com.cep.projeto.Services.ClienteService;
 import com.cep.projeto.dtos.ClienteDTO;
@@ -41,6 +40,12 @@ public class ClienteController implements ClienteControllerApi {
     public List<ClienteModelResponse> buscarPorCidade(String localidade) {
         return service.buscarPorCidade(localidade);
     }
+
+    @Override
+    public List<ClienteModelResponse> buscarPorNomeEUf(String nome, String uf) {
+        return service.buscarPorNomeEUf(nome, uf);
+    }
+
 
     @Override
     public ClienteModelResponse inserirCliente( ClienteDTO cliente){

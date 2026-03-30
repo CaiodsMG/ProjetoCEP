@@ -80,6 +80,22 @@ public interface ClienteControllerApi {
     })
     public List<ClienteModelResponse> buscarPorCidade(@RequestParam String localidade);
 
+    @GetMapping("/buscarPorNomeEUf")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Busca clientes cujo nome e UF contenham os valores informados")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Clientes encontrados"),
+            @ApiResponse(responseCode = "400",
+                    description = "Parâmetro inválido",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    ))
+    })
+    public List<ClienteModelResponse> buscarPorNomeEUf(@RequestParam String nome, @RequestParam String uf);
+
+
     @PostMapping("/Cadastrar")
     @ResponseStatus(HttpStatus.CREATED)
     public ClienteModelResponse inserirCliente(@Valid @RequestBody ClienteDTO cliente);

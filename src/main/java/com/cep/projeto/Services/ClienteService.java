@@ -57,6 +57,12 @@ public class ClienteService {
         return getClientes(clientes);
     }
 
+    public List<ClienteModelResponse> buscarPorNomeEUf(String nome, String uf){
+        List<Cliente> clientes = repository.buscarPorNomeEUf(nome, uf);
+        return getClientes(clientes);
+    }
+
+
     public ClienteModelResponse inserirCliente(ClienteDTO cliente){
         return salvarClienteComCep(cliente);
     }
@@ -115,8 +121,17 @@ public class ClienteService {
 
     private Endereco consultarCep(String cep){
         try{
-            return viaCepService.consultarCep(cep);
+            Endereco endereco = viaCepService.consultarCep(cep);
+
+            if (endereco == null || endereco.getCep() == null || endereco.getCep().isBlank()) {
+                throw new ViaCepException(cep);
+            }
+
+            return endereco;
         } catch (Exception e) {
+            if (e instanceof ViaCepException viaCepException) {
+                throw viaCepException;
+            }
             throw new ViaCepException(cep);
         }
 

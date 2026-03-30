@@ -31,4 +31,10 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     List<Cliente> buscarPorCidade(@Param("localidade") String localidade);
 
 
+    @Query("SELECT c FROM Cliente c " +
+            "WHERE UPPER(c.nome) LIKE UPPER(CONCAT('%', :nome, '%')) " +
+            "AND UPPER(c.endereco.uf) LIKE UPPER(CONCAT('%', :uf, '%'))")
+    List<Cliente> buscarPorNomeEUf(@Param("nome") String nome, @Param("uf") String uf);
+
+
 }

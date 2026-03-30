@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.util.List;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -24,16 +26,20 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ViaCepException.class)
-    public ResponseEntity<String> handleViaCepException(ViaCepException ex) {
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleViaCepException(ViaCepException ex, HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ErrorResponse> handleTypeMismatch(
-            MethodArgumentTypeMismatchException ex,
-            HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
 
         String msg = String.format(
                 "O valor '%s' é inválido para o parâmetro '%s'.",
@@ -51,21 +57,21 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleArgumentNotValid(
-            MethodArgumentNotValidException ex,
-            HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleArgumentNotValid(MethodArgumentNotValidException ex, HttpServletRequest request) {
 
-        String msg = ex.getBindingResult()
+        List<FieldErrorResponse> fields = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .findFirst()
-                .map(error -> error.getDefaultMessage())
-                .orElse("Dados inválidos.");
+                .map(error -> new FieldErrorResponse(error.getField(), error.getDefaultMessage()
+                ))
+                .toList();
+
 
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
-                msg,
-                request.getRequestURI()
+                "Erro de validação",
+                request.getRequestURI(),
+                fields
         );
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
